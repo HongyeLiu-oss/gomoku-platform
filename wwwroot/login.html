@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 · 五子棋对战平台</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body class="auth-page">
+    <div class="auth-shell">
+        <!-- 左侧品牌区 -->
+        <aside class="auth-aside">
+            <div class="brand brand-lg">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+                        <path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+                        <circle cx="9" cy="9" r="2" fill="currentColor" stroke="none"/>
+                        <circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/>
+                    </svg>
+                </span>
+                <span class="brand-text">五子棋对战平台<small>Gomoku Arena</small></span>
+            </div>
+
+            <div class="aside-copy">
+                <span class="aside-eyebrow">实时对战 · 智能匹配</span>
+                <h1>每一手落子<br>都是与高手的对话</h1>
+                <p>企业级五子棋在线对战平台，标准 15×15 棋盘、实时匹配与完整战绩沉淀，随时开启一局高质量对弈。</p>
+                <ul class="feature-list">
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+                        </span>
+                        <div class="feature-text"><strong>秒级匹配</strong><span>快速匹配水平相近的对手开局</span></div>
+                    </li>
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+                        </span>
+                        <div class="feature-text"><strong>标准 15×15 棋盘</strong><span>五子连珠，先手白棋，每步限时 60 秒</span></div>
+                    </li>
+                    <li>
+                        <span class="feature-icon" aria-hidden="true">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+                        </span>
+                        <div class="feature-text"><strong>战绩与积分</strong><span>每局结果自动记录，持续沉淀成长轨迹</span></div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="aside-footer">Gomoku Arena · 企业级在线对战平台</div>
+
+            <div class="board-art" aria-hidden="true">
+                <div class="board-grid"></div>
+                <span class="art-stone black s1"></span>
+                <span class="art-stone white s2"></span>
+                <span class="art-stone black s3"></span>
+            </div>
+        </aside>
+
+        <!-- 右侧表单区 -->
+        <main class="auth-main">
+            <div class="auth-card">
+                <div class="auth-card-head">
+                    <span class="auth-eyebrow">Account</span>
+                    <h2 class="auth-title" id="auth-title">欢迎回来</h2>
+                    <p class="auth-sub" id="auth-sub">登录后进入游戏大厅，开始实时匹配</p>
+                </div>
+
+                <div class="auth-tabs" role="tablist">
+                    <button class="auth-tab active" id="tab-login" onclick="switch_tab('login')">登录</button>
+                    <button class="auth-tab" id="tab-register" onclick="switch_tab('register')">注册</button>
+                </div>
+
+                <div class="auth-panel" id="login-panel">
+                    <div class="field">
+                        <label for="login_user_name">用户名</label>
+                        <div class="field-control">
+                            <span class="field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+                            </span>
+                            <input type="text" id="login_user_name" placeholder="请输入用户名" maxlength="32" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="login_password">密码</label>
+                        <div class="field-control">
+                            <span class="field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                            </span>
+                            <input type="password" id="login_password" placeholder="请输入密码" maxlength="64" autocomplete="current-password">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary auth-submit" onclick="login()">登录</button>
+                    <div class="auth-msg err" id="login-msg"></div>
+                </div>
+
+                <div class="auth-panel" id="register-panel" style="display:none">
+                    <div class="field">
+                        <label for="reg_user_name">用户名</label>
+                        <div class="field-control">
+                            <span class="field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c0-3.6 3.1-6 7-6s7 2.4 7 6"/></svg>
+                            </span>
+                            <input type="text" id="reg_user_name" placeholder="请输入用户名" maxlength="32" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="reg_password">密码</label>
+                        <div class="field-control">
+                            <span class="field-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                            </span>
+                            <input type="password" id="reg_password" placeholder="设置登录密码" maxlength="64" autocomplete="new-password">
+                        </div>
+                    </div>
+                    <button class="btn btn-primary auth-submit" onclick="reg()">创建账号</button>
+                    <div class="auth-msg err" id="reg-msg"></div>
+                </div>
+
+                <div class="auth-foot">登录即代表同意平台对局规范，请文明对弈</div>
+            </div>
+        </main>
+    </div>
+
+    <script src="./js/jquery.min.js"></script>
+    <script>
+        // 登录/注册之间的切换
+        function switch_tab(tab) {
+            var is_register = (tab == "register");
+            document.getElementById("tab-login").className = is_register ? "auth-tab" : "auth-tab active";
+            document.getElementById("tab-register").className = is_register ? "auth-tab active" : "auth-tab";
+            document.getElementById("login-panel").style.display = is_register ? "none" : "flex";
+            document.getElementById("register-panel").style.display = is_register ? "flex" : "none";
+            document.getElementById("auth-title").innerHTML = is_register ? "创建新账号" : "欢迎回来";
+            document.getElementById("auth-sub").innerHTML = is_register
+                ? "创建账号，加入实时对局"
+                : "登录后进入游戏大厅，开始实时匹配";
+        }
+        // 在指定区域显示提示信息
+        function show_msg(id, text, ok) {
+            var msg_div = document.getElementById(id);
+            msg_div.innerHTML = text;
+            msg_div.className = ok ? "auth-msg ok" : "auth-msg err";
+        }
+        //1. 封装登录请求函数
+        function login() {
+            //  1. 获取输入框中的用户名和密码，并组织json对象
+            var login_info = {
+                username: document.getElementById("login_user_name").value,
+                password: document.getElementById("login_password").value
+            };
+            //  2. 通过ajax向后台发送登录验证请求
+            $.ajax({
+                url: "/login",
+                type: "post",
+                data: JSON.stringify(login_info),
+                success: function(result) {
+                    //  3. 如果验证通过，则跳转游戏大厅页面
+                    window.location.assign("/game_hall.html");
+                },
+                error: function(xhr) {
+                    //  4. 如果验证失败，则提示错误信息，并清空输入框
+                    var reason = (xhr.responseJSON && xhr.responseJSON.reason) ? xhr.responseJSON.reason : "用户名或密码错误!";
+                    show_msg("login-msg", reason, false);
+                    console.log(JSON.stringify(xhr));
+                    document.getElementById("login_user_name").value = "";
+                    document.getElementById("login_password").value = "";
+                }
+            })
+        }
+        //2. 封装实现注册函数
+        function reg() {
+            //  1. 获取两个输入框中的数据，组织成为一个json串
+            var reg_info = {
+                username: document.getElementById("reg_user_name").value,
+                password: document.getElementById("reg_password").value
+            };
+            console.log(JSON.stringify(reg_info));
+            //  2. 通过ajax向后台发送用户注册请求
+            $.ajax({
+                url: "/reg",
+                type: "post",
+                data: JSON.stringify(reg_info),
+                success: function (res) {
+                    if (res.result == false) {
+                        //  4. 如果请求失败，则清空两个输入框内容，并提示错误原因
+                        show_msg("reg-msg", res.reason, false);
+                        console.log(res.reason);
+                        document.getElementById("reg_password").value = "";
+                    } else {
+                        //  3. 如果请求成功，则切换到登录页签，并自动填充用户名
+                        show_msg("reg-msg", res.reason + "，请登录", true);
+                        console.log(res.reason);
+                        document.getElementById("login_user_name").value = reg_info.username;
+                        document.getElementById("reg_user_name").value = "";
+                        document.getElementById("reg_password").value = "";
+                        switch_tab("login");
+                    }
+                },
+                error: function (xhr) {
+                    var reason = (xhr.responseJSON && xhr.responseJSON.reason) ? xhr.responseJSON.reason : "注册失败!";
+                    show_msg("reg-msg", reason, false);
+                    console.log(JSON.stringify(xhr));
+                }
+            })
+        }
+        // 密码框回车直接提交
+        document.getElementById("login_password").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") login();
+        });
+        document.getElementById("reg_password").addEventListener("keydown", function (e) {
+            if (e.key === "Enter") reg();
+        });
+        // 通过URL参数直接打开注册页签(register.html会跳转到 /login.html?tab=register)
+        if (location.search.indexOf("tab=register") != -1) {
+            switch_tab("register");
+        }
+    </script>
+</body>
+</html>

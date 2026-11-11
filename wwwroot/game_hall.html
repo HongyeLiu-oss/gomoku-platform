@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏大厅 · 五子棋对战平台</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/game_hall.css">
+</head>
+<body class="hall-page">
+    <header class="nav">
+        <div class="nav-left">
+            <div class="brand">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.4">
+                        <rect x="3" y="3" width="18" height="18" rx="2.5"/>
+                        <path d="M3 9h18M3 15h18M9 3v18M15 3v18"/>
+                        <circle cx="9" cy="9" r="2" fill="currentColor" stroke="none"/>
+                        <circle cx="15" cy="15" r="2" fill="currentColor" stroke="none"/>
+                    </svg>
+                </span>
+                <span class="brand-text">五子棋对战平台<small>Gomoku Arena</small></span>
+            </div>
+        </div>
+        <div class="nav-center">
+            <span class="nav-context">游戏大厅</span>
+        </div>
+        <div class="nav-actions">
+            <span class="online-pill"><span class="online-dot"></span>在线 <strong id="online-tip">—</strong> 人</span>
+            <button class="btn btn-ghost" id="logout-button">退出登录</button>
+        </div>
+    </header>
+
+    <main class="hall-main">
+        <!-- 匹配中心 -->
+        <section class="panel match-panel">
+            <header class="match-head">
+                <div>
+                    <span class="panel-eyebrow">匹配中心</span>
+                    <h1 class="match-title">准备好开始一局了吗</h1>
+                </div>
+                <span class="live-pill"><span class="live-dot"></span>实时匹配</span>
+            </header>
+
+            <div class="profile-row">
+                <span class="profile-avatar" id="user-avatar">棋</span>
+                <div class="profile-info">
+                    <h2 class="profile-name" id="user-name">加载中…</h2>
+                    <p class="profile-meta">标准 15 × 15 棋盘 · 五子连珠 · 每步限时 60 秒</p>
+                </div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-tile">
+                    <span class="stat-label">积分</span>
+                    <strong class="stat-value" id="stat-score">—</strong>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">总对局</span>
+                    <strong class="stat-value" id="stat-total">—</strong>
+                </div>
+                <div class="stat-tile">
+                    <span class="stat-label">胜率</span>
+                    <strong class="stat-value" id="stat-rate">—</strong>
+                </div>
+            </div>
+
+            <button class="match-button" id="match-button" disabled>
+                <span class="match-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+                </span>
+                <span class="match-copy">
+                    <strong id="match-text">开始匹配</strong>
+                    <small id="match-hint">系统将为你匹配水平相近的对手</small>
+                </span>
+                <span class="match-arrow" aria-hidden="true">→</span>
+            </button>
+
+            <div class="match-status" id="match-status">
+                <span class="status-dot"></span>
+                <span id="match-status-text">正在连接匹配服务…</span>
+            </div>
+        </section>
+
+        <!-- 右侧信息 -->
+        <aside class="hall-side">
+            <section class="panel">
+                <header class="panel-head">
+                    <h2 class="panel-title">对局规则</h2>
+                </header>
+                <dl class="rule-list">
+                    <div><dt>棋盘规格</dt><dd>15 × 15</dd></div>
+                    <div><dt>胜负判定</dt><dd>五子连珠</dd></div>
+                    <div><dt>先手方</dt><dd>白棋</dd></div>
+                    <div><dt>每步限时</dt><dd>60 秒</dd></div>
+                </dl>
+            </section>
+
+            <section class="panel">
+                <header class="panel-head">
+                    <h2 class="panel-title">匹配小贴士</h2>
+                </header>
+                <ul class="tip-list">
+                    <li><span class="tip-index">01</span><p>等待期间可随时取消匹配，不影响积分。</p></li>
+                    <li><span class="tip-index">02</span><p>匹配成功后会自动进入对局房间，请勿关闭页面。</p></li>
+                    <li><span class="tip-index">03</span><p>每步限时 60 秒，超时将由系统自动落子。</p></li>
+                </ul>
+            </section>
+
+            <div class="hall-foot">Gomoku Arena · 企业级在线对战平台</div>
+        </aside>
+    </main>
+
+    <script src="./js/jquery.min.js"></script>
+    <script>
+        var ws_url = "ws://" + location.host + "/hall";
+        var ws_hdl = null;
+
+        window.onbeforeunload = function() {
+            if (ws_hdl != null)
+                ws_hdl.close();
+        }
+        // 退出登录按钮:请求后端销毁Session并返回登录页
+        var logout_button = document.getElementById("logout-button");
+        logout_button.onclick = function() {
+            $.ajax({
+                url: "/logout",
+                type: "post",
+                success: function() {
+                    location.replace("/login.html");
+                },
+                error: function() {
+                    location.replace("/login.html");
+                }
+            });
+        }
+        //按钮有两个状态：没有进行匹配的状态，正在匹配中的状态
+        var button_flag = "stop";
+        var match_button = document.getElementById("match-button");
+
+        // 更新匹配状态提示
+        function set_hall_status(text, type) {
+            var status = document.getElementById("match-status");
+            status.className = "match-status" + (type ? " " + type : "");
+            document.getElementById("match-status-text").textContent = text;
+        }
+        // 切换匹配按钮的两种状态
+        function set_match_state(matching) {
+            button_flag = matching ? "start" : "stop";
+            document.getElementById("match-text").textContent = matching ? "停止匹配" : "开始匹配";
+            document.getElementById("match-hint").textContent = matching
+                ? "正在寻找对手，点击可取消匹配"
+                : "系统将为你匹配水平相近的对手";
+            match_button.classList.toggle("matching", matching);
+            if (matching) {
+                set_hall_status("正在为你寻找水平相近的对手…", "active");
+            } else {
+                set_hall_status("匹配队列空闲，点击上方按钮开始", "");
+            }
+        }
+        //点击按钮的事件处理：
+        match_button.onclick = function() {
+            if (button_flag == "stop") {
+                //1. 没有进行匹配的状态下点击按钮，发送对战匹配请求
+                var req_json = {
+                    optype: "match_start"
+                }
+                ws_hdl.send(JSON.stringify(req_json));
+            }else {
+                //2. 正在匹配中的状态下点击按钮，发送停止对战匹配请求
+                var req_json = {
+                    optype: "match_stop"
+                }
+                ws_hdl.send(JSON.stringify(req_json));
+            }
+        }
+        function get_user_info() {
+            $.ajax({
+                url: "/info",
+                type: "get",
+                success: function(res) {
+                    // 用户数据来自数据库,统一用 textContent 渲染,避免用户名夹带HTML造成XSS
+                    var username = String(res.username == null ? "玩家" : res.username);
+                    var total = parseInt(res.total_count) || 0;
+                    var win = parseInt(res.win_count) || 0;
+                    var rate = total > 0 ? Math.round(win / total * 100) : 0;
+                    document.getElementById("user-name").textContent = username;
+                    document.getElementById("user-avatar").textContent = username.charAt(0).toUpperCase();
+                    document.getElementById("stat-score").textContent = (res.score == null ? "0" : res.score);
+                    document.getElementById("stat-total").textContent = total;
+                    document.getElementById("stat-rate").textContent = rate + "%";
+
+                    ws_hdl = new WebSocket(ws_url);
+                    ws_hdl.onopen = ws_onopen;
+                    ws_hdl.onclose = ws_onclose;
+                    ws_hdl.onerror = ws_onerror;
+                    ws_hdl.onmessage = ws_onmessage;
+                },
+                error: function(xhr) {
+                    console.log(JSON.stringify(xhr));
+                    location.replace("/login.html");
+                }
+            })
+        }
+        function ws_onopen() {
+            console.log("websocket onopen");
+            match_button.disabled = false;
+            set_hall_status("匹配队列空闲，点击上方按钮开始", "");
+        }
+        function ws_onclose() {
+            console.log("websocket onclose");
+            match_button.disabled = true;
+            set_match_state(false);
+            set_hall_status("与服务器的连接已断开，请刷新页面重试", "error");
+        }
+        function ws_onerror() {
+            console.log("websocket onerror");
+            match_button.disabled = true;
+            set_hall_status("匹配服务连接失败，请刷新页面重试", "error");
+        }
+        function ws_onmessage(evt) {
+            var rsp_json = JSON.parse(evt.data);
+            if (rsp_json["optype"] == "online_count") {
+                document.getElementById("online-tip").innerText = rsp_json.count;
+                return;
+            }
+            if (rsp_json["optype"] == "hall_ready") {
+                // 只有连接建立阶段的登录校验失败才需要重新登录
+                if (rsp_json.result == false) {
+                    console.log(evt.data);
+                    location.replace("/login.html");
+                }
+            }else if (rsp_json["optype"] == "match_success") {
+                //对战匹配成功
+                location.replace("/game_room.html");
+            }else if (rsp_json["optype"] == "match_start") {
+                if (rsp_json.result == false) {
+                    // 已在匹配队列/房间中等情况:维持当前按钮状态
+                    console.log("match_start失败: " + rsp_json.reason);
+                    set_hall_status(rsp_json.reason || "加入匹配队列失败，请稍后重试", "error");
+                    return;
+                }
+                console.log("玩家已经加入匹配队列");
+                set_match_state(true);
+                return;
+            }else if (rsp_json["optype"] == "match_stop"){
+                if (rsp_json.result == false) {
+                    console.log("match_stop失败: " + rsp_json.reason);
+                    set_hall_status(rsp_json.reason || "取消匹配失败，请稍后重试", "error");
+                    return;
+                }
+                console.log("玩家已经移除匹配队列");
+                set_match_state(false);
+                return;
+            }else {
+                console.log(evt.data);
+                return;
+            }
+        }
+        get_user_info();
+    </script>
+</body>
+</html>

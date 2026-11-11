@@ -1,0 +1,285 @@
+/* ============================================================
+   公共设计体系：企业级五子棋对战平台
+   深色指挥栏 + 浅色内容区 + 玉青强调色(与对局房间保持一致)
+   ============================================================ */
+
+:root {
+    --bg-page: #eef1f4;
+    --surface: #ffffff;
+    --surface-2: #f6f8fa;
+    --surface-3: #eef2f6;
+    --line: #e3e8ee;
+    --line-strong: #d6dde5;
+    --ink: #0f1c26;
+    --text: #26333f;
+    --muted: #6b7a88;
+    --muted-2: #93a0ad;
+    --jade: #0f766e;
+    --jade-dark: #0b5a53;
+    --jade-soft: #e7f5f2;
+    --gold: #b9912e;
+    --danger: #c2413a;
+    --danger-soft: #fdeceb;
+    --success: #0f766e;
+    --radius: 20px;
+    --radius-lg: 16px;
+    --radius-md: 12px;
+    --shadow-card: 0 20px 44px -28px rgba(15, 28, 38, 0.35);
+    --shadow-soft: 0 1px 2px rgba(15, 28, 38, 0.04);
+    --topbar-h: 64px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    min-height: 100%;
+}
+
+body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    color: var(--text);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    background:
+        radial-gradient(1100px 500px at 10% -12%, rgba(15, 118, 110, 0.09), transparent 60%),
+        radial-gradient(900px 460px at 100% 0%, rgba(185, 145, 46, 0.09), transparent 55%),
+        var(--bg-page);
+}
+
+button,
+input {
+    font-family: inherit;
+}
+
+:focus-visible {
+    outline: 2px solid rgba(15, 118, 110, 0.55);
+    outline-offset: 2px;
+}
+
+/* ---------- 品牌标识 ---------- */
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.brand-mark {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    border-radius: 11px;
+    color: #d8f3ee;
+    background: linear-gradient(145deg, rgba(15, 118, 110, 0.9), rgba(15, 118, 110, 0.42));
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.brand-text {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: #eaf1f6;
+}
+
+.brand-text small {
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: rgba(234, 241, 246, 0.48);
+}
+
+.brand-lg .brand-mark {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+}
+
+.brand-lg .brand-text {
+    font-size: 18px;
+    letter-spacing: 0.8px;
+}
+
+.brand-lg .brand-text small {
+    font-size: 10px;
+}
+
+/* ---------- 顶部指挥栏 ---------- */
+.nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    height: var(--topbar-h);
+    padding: 0 clamp(16px, 3vw, 32px);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #eaf1f6;
+    background: linear-gradient(120deg, #101d27 0%, #142936 100%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    box-shadow: 0 8px 24px -18px rgba(9, 18, 26, 0.9);
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+}
+
+.nav-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    min-width: 0;
+}
+
+.nav-context {
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: rgba(234, 241, 246, 0.72);
+    padding: 6px 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    white-space: nowrap;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 0 0 auto;
+}
+
+/* ---------- 按钮 ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 36px;
+    padding: 0 16px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.18s, border-color 0.18s, transform 0.18s, box-shadow 0.18s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn:active {
+    transform: none;
+}
+
+.btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.btn-primary {
+    background: var(--jade);
+    color: #fff;
+    box-shadow: 0 10px 22px -14px rgba(15, 118, 110, 0.9);
+}
+
+.btn-primary:hover {
+    background: var(--jade-dark);
+}
+
+.btn-danger {
+    background: var(--danger);
+    color: #fff;
+}
+
+.btn-danger:hover {
+    background: #d14a42;
+    box-shadow: 0 10px 20px -12px rgba(194, 65, 58, 0.9);
+}
+
+.btn-ghost {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #e8eff5;
+}
+
+.btn-ghost:hover {
+    background: rgba(255, 255, 255, 0.13);
+}
+
+/* ---------- 通用卡片与容器 ---------- */
+.glass-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-card);
+}
+
+.container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    min-height: calc(100vh - var(--topbar-h));
+    display: flex;
+    overflow-y: auto;
+}
+
+/* ---------- 响应式 ---------- */
+@media (max-width: 720px) {
+    .nav {
+        height: auto;
+        min-height: var(--topbar-h);
+        flex-wrap: wrap;
+        padding: 10px 14px;
+        gap: 10px;
+    }
+
+    .nav-left {
+        flex: 1;
+    }
+
+    .nav-center {
+        display: none;
+    }
+
+    .brand-text {
+        font-size: 13px;
+    }
+
+    .brand-text small {
+        display: none;
+    }
+
+    .brand-mark {
+        width: 32px;
+        height: 32px;
+    }
+
+    .btn {
+        height: 34px;
+        padding: 0 13px;
+        font-size: 12.5px;
+    }
+}

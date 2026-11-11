@@ -1,0 +1,17 @@
+# 本地备份图片,不进仓库
+sky_original_backup.jpeg
+
+# 运行日志,不进仓库
+gobang.log
+
+# 本地数据库配置(含密码),不进仓库
+config.hpp
+
+# 版权音乐文件,不进仓库
+wwwroot/music/*.mp3
+wwwroot/music/*.m4a
+wwwroot/music/*.flac
+
+# 临时分享包,不进仓库
+.trae-html-share-packages/
+
